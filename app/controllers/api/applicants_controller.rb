@@ -49,7 +49,7 @@ class Api::ApplicantsController < ApplicationController
     {
       thanks: "Hi #{applicant.github}, thank you for your application.",
       next_steps: "Expect to hear back from me rain or shine within 7 business days :)",
-      source: 'jd+apprenticeship@startuplandia.io',
+      source: "#{applicant.email}",
       updated_at: applicant.updated_at.to_s
     }
   end

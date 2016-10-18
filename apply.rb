@@ -3,7 +3,7 @@ require 'json'
 
 # [:github, :email, :linkedin :personal_site, questions: [ :fibonacci, :user_auth_diagram, :http_diagram_1, :http_diagram_2 ]]
 
-conn = Faraday.new(:url => 'http://localhost:3000/api/applicants')
+conn = Faraday.new(:url => 'http://apprenticeship.startuplandia.io/api/applicants')
 application_body =  {
   application: {
     github: 'startuplandia',
