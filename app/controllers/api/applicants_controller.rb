@@ -3,7 +3,7 @@ class Api::ApplicantsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def create
-    applicant = build_waffle snag_params
+    applicant = process_waffle hashify_params
     if applicant.save
       render json: serve_waffle(applicant)
     else
@@ -13,16 +13,23 @@ class Api::ApplicantsController < ApplicationController
 
   private
 
-  def build_waffle waffle_details
-    record = Applicant.where(email: waffle_details[:email], github: waffle_details[:github])
-      .first_or_initialize do |record|
-        record.application = {questions: waffle_details[:questions]}
-      end
-    record.update_attributes(linkedin: waffle_details[:linkedin], personal_site)
-    record
+  def process_waffle details
+    update_waffle(build_waffle(details), details)
   end
 
-  def snag_params
+  def build_waffle details
+    Applicant.where(email: details[:email], github: details[:github]).first_or_initialize
+  end
+
+  def update_waffle waffle, details
+    application = details[:questions].symbolize_keys
+    waffle.application = application 
+    waffle.linkedin = details[:linkedin]
+    waffle.personal_site = details[:personal_site]
+    waffle
+  end
+
+  def hashify_params
     params.require(:application).permit(application_params).to_h
   end
 
